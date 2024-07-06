@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade 1 - Calculadora de IMC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <noscript>Seu navegador está com javascript desativado!</noscript>
+
+    <header>
+        <h1>Calculando seu IMC</h1>
+        <p>Preencha os campos abaixo e clique em "calcular" para saber qual o seu IMC</p>
+    </header>
+
+    <main>
+        <form id="calculadora">
+            
+            <input type="text" name="peso" id="peso" placeholder="Peso em kilogramas*" required>
+            
+            <input type="text" name="altura" id="altura" placeholder="Altura em metros*" required>
+
+            <legend>Os campos marcados com * são obrigatórios.</legend>
+
+            <input type="submit" value="Calcular">
+        </form>
+        
+        <div id="resultado"></div>
+    </main>
+
+    <footer>
+        <p>Desenvolvido por Bruna Motta</p>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
