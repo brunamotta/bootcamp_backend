@@ -1,5 +1,5 @@
 const prompt = require('prompt-sync')();
-const nomeAluno = ``;
+let nomeAluno = ``;
 let materias = [];
 
 function recepcaoAluno() {
@@ -7,27 +7,38 @@ function recepcaoAluno() {
     nomeAluno = prompt(`Digite seu nome para iniciar: `);
 }
 
-function cadastraMaterias() {
-    let qtdMaterias = prompt(`Olá, ${nomeAluno}! Quantas matérias você deseja cadastrar? `);
+function cadastrarMaterias() {
+    
+    console.log(`Olá, ${nomeAluno}!`);
+    console.log(` `);
+    
+    while(true) {
+        let materia = prompt(`Qual o nome da matéria que você deseja cadastrar? `);
+        console.log(` `);
 
-    if(qtdMaterias < 3) {
+        materias.push(materia);
+        let qtdMaterias = materias.length;
+        let continuar = prompt(`Deseja cadastrar mais alguma matéria? (S/N) `);
+        console.log(` `);
 
-        console.log(`É necessário cadastrar no mínimo 3 matérias! Tente novamente`);
-        console.log(``);
 
-        return cadastraMaterias();
+        if(continuar.toUpperCase() === `S`) {
+            continue;
+        }
 
-    } else {
+        if(continuar.toUpperCase() === `N` && qtdMaterias >= 3) {
+            break;
 
-        for(let i = 0; i < qtdMaterias; i++) {
+        } else {
+            console.log(`É necessário cadastrar no mínimo 3 matérias!`);
+            console.log(` `);
 
-            let materia = prompt(`Digite o nome da matéria ${i+1}: `);
-            materias.push(materia);
-            console.log(materias);
-            
+            continue;
         }
     }
+
+    console.log(`Matérias cadastradas: ${materias}`);
 }
 
 recepcaoAluno();
-cadastraMaterias(); 
+cadastrarMaterias(); 
