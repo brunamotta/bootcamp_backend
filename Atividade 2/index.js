@@ -1,6 +1,3 @@
-//TODO: Verificar porque a validação de faltas não está funcionando corretamente (se errar 2 vezes ele aprova o usuário de qq jeito)
-//TODO: Verificar se a validação do S/N está funcionando corretamente
-
 const prompt = require('prompt-sync')();
 
 // Inicializando variáveis de escopo global
@@ -26,18 +23,20 @@ function gerirMaterias() {
     while(true) {
         let materia = prompt(`Qual o nome da matéria que você deseja cadastrar? `);
         console.log(` `);
+
         materias.push(materia);
-        
         let qtdMaterias = materias.length;
+
         let media = cadastrarNotas(materia);
-        let presenca = cadastrarFaltas(materia);
+        let faltas = cadastrarFaltas(materia);
+        let presenca = verificarPresenca(faltas)
 
         verificarAprovacao(media, presenca);
 
         console.log(`---------------------------------`);
 
         let continuar = prompt(`Deseja cadastrar mais alguma matéria? (S/N) `);
-        validarSN(continuar);
+        continuar = validarSN(continuar);
 
         if(continuar.toUpperCase() === `S`) {
             continue;
@@ -78,7 +77,7 @@ function calcularMedia(notas) {
         soma += nota;
     });
 
-    let media = (soma / notas.length).toFixed(1);
+    let media = (soma / notas.length).toFixed(2);
     medias.push(media);
 
     return media;
@@ -87,36 +86,21 @@ function calcularMedia(notas) {
 //cadastra as faltas
 function cadastrarFaltas(materia) {
     let qtdFaltas = parseInt(prompt(`Digite a quantidade de faltas em ${materia}: `));
-
-
-
-    console.log(` `);
-    console.log(`### ENTRADA DO USUÀRIO ###`);
-    console.log(typeof qtdFaltas);
-    console.log(qtdFaltas);
-    console.log(`#######`);
-    console.log(` `);
-
-
-
-    qtdFaltasValidadas = validarFaltas(qtdFaltas);
-
-    
-
-    console.log(` `);
-    console.log(`### pós validação ###`);
-    console.log(typeof qtdFaltas);
-    console.log(qtdFaltas);
-    console.log(`#######`);
-    console.log(` `);
-
-
+    let qtdFaltasValidadas = validarFaltas(qtdFaltas);
 
     faltasPorMateria.push(qtdFaltasValidadas);
-    console.log(faltasPorMateria);
 
-    return qtdFaltasValidadas > 5 ? 'ausente' : 'presente';
+    return qtdFaltasValidadas
 };
+
+//verifica a assiduidade do aluno
+function verificarPresenca(faltas) {
+    if(faltas <= 5) {
+        return 'presente';
+    } else {
+        return 'ausente';
+    }
+}
 
 //verifica situação final do aluno na matéria
 function verificarAprovacao(media, presenca) {
@@ -131,7 +115,7 @@ function verificarAprovacao(media, presenca) {
     } else {
         console.log('Sinto muito, você foi reprovado na matéria!');
         console.log('');
-
+        
         resultado = `Reprovado!`;
         boletim.push(resultado);
 
@@ -140,14 +124,17 @@ function verificarAprovacao(media, presenca) {
 
 // exibe o resultado final do boletim
 function exibirResultado() {
+    console.log(` `);
+    console.log(`---------------------------------`);
+    console.log(` `);
     console.log(`${nomeAluno}, suas notas foram cadastradas com sucesso!`);
     console.log(`Seu boletim ficou da seguinte forma: `);
     materias.map( (materia, i) => {
-        return console.log(`Matéria: ${materia} |   Média: ${medias[i]} |   Faltas: ${faltasPorMateria[i]}  |   Situação Final: ${boletim[i]}`);
+        return console.log(`Matéria: ${materia}   |   Média: ${medias[i]}   |   Faltas: ${faltasPorMateria[i]}   |   Situação Final: ${boletim[i]}`);
     })
 };
 
-// Funções para validação das entradas de notas, faltas e confirmações para continuar
+// Funções para validação das entradas do usuário
 function validarNota(entrada) {
     try {
         if (isNaN(entrada)) {
@@ -161,9 +148,8 @@ function validarNota(entrada) {
         console.log(` `);
 
         entrada = parseFloat(prompt(`Digite um valor válido: `));
-        validarNota(entrada);
+        entrada = validarNota(entrada);
     }
-
     return entrada;
 }
 
@@ -181,20 +167,8 @@ function validarFaltas(entrada) {
         console.log(` `);
 
         entrada = parseInt(prompt(`Digite um valor válido: `));
-
-
-
-        console.log(`### DURANTE VALIDAçÂO ####`);
-        console.log(typeof entrada);
-        console.log(entrada);
-        console.log(`#######`);
-
-
-
-        validarFaltas(entrada);
-
+        entrada = validarFaltas(entrada);
     }
-
     return entrada;
 }
 
@@ -208,9 +182,8 @@ function validarSN(entrada) {
         console.log(` `);
 
         entrada = prompt(`Digite um valor válido: `);
-        validarSN(entrada);
+        entrada = validarSN(entrada);
     }
-
     return entrada;
 }
 
