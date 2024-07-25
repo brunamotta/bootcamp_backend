@@ -1,18 +1,14 @@
-import { ContaCorrente } from './modules/conta-corrente.js';
-import { ContaPoupanca } from './modules/conta-poupanca.js';
+const ContaCorrente = require('./conta-corrente.js');
+const ContaPoupanca = require('./conta-poupanca.js');
+const prompt = require('prompt-sync')();
 
-const conta1 = new ContaPoupanca('João', 0.005);
-const conta2 = new ContaCorrente('Maria', 0.01);
+let contaCorrente1 = new ContaCorrente('Bruno', 123456);
+let contaPoupanca1 = new ContaPoupanca('fhtryhtr', 123456);
 
-console.log('');
-conta1.exibirDetalhes();
-console.log('');
-console.log('---------------------');
-console.log('');
-conta2.exibirDetalhes();
-console.log('');
+console.log(contaCorrente1);
+console.log(contaPoupanca1);
 
-/* const opcoes = [1, 2, 3, 4];
+const opcoesMenuPrincipal = [1, 2, 3];
 let fechar = false;
 
 console.log('');
@@ -21,66 +17,88 @@ console.log('');
 
 while(fechar === false) {
 
-    exibeMenu();
+    exibeMenuPrincipal();
     let opcao = parseInt(prompt('Digite o número da opção desejada: '));
-    let opcaoValida = validaOpcao(opcao, opcoes);
+    let opcaoValida = validaOpcao(opcao, opcoesMenuPrincipal);
+
+    console.log('Você escolheu a opção: ' + opcaoValida);
 
     if (opcaoValida === 1) {
         console.log('');
         console.log('Você escolheu abrir uma conta corrente.');
-        let nome = prompt('Digite o nome completo do titular da conta: ');
-        let ContaCorrente = new ContaCorrente(nome);
+
+        //TODO: transformar em uma função
+        let titularCC = prompt('Digite o nome completo do titular da conta: ');
+        let senhaCC = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
+        let contaCorrente = new ContaCorrente(titularCC, senhaCC);
 
         console.log('');
-        console.log(`${ContaCorrente.titular}, sua conta corrente foi aberta com sucesso, seja bem vinde ao BruBank!`);
+        console.log(`${contaCorrente.titular}, sua conta corrente foi aberta com sucesso, seja bem vinde ao BruBank!`);
         console.log('');
-        ContaCorrente.exibirDetalhes();
+        contaCorrente.exibirDetalhes();
         console.log('');
         console.log('Deseja realizar mais alguma operação?');
+
+        //TODO: elaborar funções que chamam os métodos da conta
+
+        continue;
     }
     
     if (opcao === 2) {
         console.log('');
         console.log('Você escolheu abrir uma conta poupança.');
-        let nome = prompt('Digite o nome do titular da conta: ');
-        let ContaPoupanca = new ContaPoupanca(nome);
+
+        //TODO: transformar em uma função
+        let titularCP = prompt('Digite o nome do titular da conta: ');
+        let senhaCP = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
+        let contaPoupanca = new ContaPoupanca(titularCP, senhaCP);
         console.log('');
-        console.log(`${ContaCorrente.titular}, sua conta poupança foi aberta com sucesso, seja bem vinde ao BruBank!`);
+        console.log(`${contaPoupanca.titular}, sua conta poupança foi aberta com sucesso, seja bem vinde ao BruBank!`);
         console.log('');
-        ContaPoupanca.exibirDetalhes();
+        contaPoupanca.exibirDetalhes();
         console.log('');
         console.log('Deseja realizar mais alguma operação?');
+
+        //TODO: elaborar funções que chamam os métodos da conta
+
+        continue;
     }
 
     if (opcao === 3) {
         console.log('');
-        console.log('Você escolheu acessar uma conta.');
-        let conta = parseInt(prompt('Digite o número da conta: '));
-        let senha = parseInt(prompt('Digite a senha da conta: '));
-        console.log('');
-        console.log('Conta acessada com sucesso!');
-        console.log('');
-        console.log('Deseja realizar mais alguma operação?');
-    
+        console.log('Obrigado por utilizar o Brubank! Volte sempre!');
+        fechar = true;
+        break;
     }
 }
 
-function exibeMenu() {
+function abrirContaCorrente() {
+    //TODO: Implementar
+}
+
+function abrirContaPoupanca() {
+    //TODO: Implementar
+}
+
+function exibeMenuPrincipal() {
     console.log('------------ MENU ------------');
     console.log('|  1. Abrir conta corrente   |');
     console.log('|  2. Abrir conta poupança   |');
-    console.log('|  3. Acessar conta          |');
-    console.log('|  4. Sair                   |');
+    console.log('|  3. Sair                   |');
     console.log('------------------------------');
 }
 
-function validaOpcao(opcao, opcoes) {
-    while (!opcoes.includes(opcao)) {
-        console.log('Opção inválida! Tente novamente.');
+function validaOpcao(opcao, opcoesMenuPrincipal) {
+    try{
+        if (!opcoesMenuPrincipal.includes(opcao)) {
+            throw (new Error('Opção inválida! Tente novamente.'));
+        }
+    } catch (error) {
+        console.error(error.message);
+        console.log('');
         
         opcao = parseInt(prompt('Digite o número da opção desejada: '));
-        opcao = validaOpcao (opcao,opcoes);
-        
-        return opcao;   
+        opcao = validaOpcao (opcao, opcoesMenuPrincipal);    
     }
-} */
+    return opcao;
+}

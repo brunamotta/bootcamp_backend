@@ -1,17 +1,18 @@
-import { Conta } from './conta.js';
+const Conta = require('./conta.js');
 
-export class ContaCorrente extends Conta {
-    static tipo = 'Corrente';
+class ContaCorrente extends Conta {
+    static tipo = 'Conta Corrente';
     juros;
 
     constructor(titular, senha) {
         super(titular, senha);
-        this.juros = 0.001;
+        this.juros = 0.01;
     }
 
     aplicarJuros() {
-        this.saldo += this.saldo * this.juros;
+        this.saldo = this.saldo + (this.saldo * this.juros);
         console.log(`O juros de R$${this.saldo * this.juros} foi aplicado com sucesso. Seu novo saldo é: R$${this.saldo}.`);
+        return
     }
 
     exibirDetalhes() {
@@ -20,3 +21,5 @@ export class ContaCorrente extends Conta {
         return
     }
 }
+
+module.exports = ContaCorrente;
