@@ -2,13 +2,8 @@ const ContaCorrente = require('./conta-corrente.js');
 const ContaPoupanca = require('./conta-poupanca.js');
 const prompt = require('prompt-sync')();
 
-let contaCorrente1 = new ContaCorrente('Bruno', 123456);
-let contaPoupanca1 = new ContaPoupanca('fhtryhtr', 123456);
-
-console.log(contaCorrente1);
-console.log(contaPoupanca1);
-
 const opcoesMenuPrincipal = [1, 2, 3];
+const opcoesMenuDaConta = [1, 2, 3, 4];
 let fechar = false;
 
 console.log('');
@@ -19,28 +14,31 @@ while(fechar === false) {
 
     exibeMenuPrincipal();
     let opcao = parseInt(prompt('Digite o número da opção desejada: '));
-    let opcaoValida = validaOpcao(opcao, opcoesMenuPrincipal);
+    opcao = validaOpcao(opcao, opcoesMenuPrincipal);
 
-    console.log('Você escolheu a opção: ' + opcaoValida);
+    console.log('');
 
-    if (opcaoValida === 1) {
+    if (opcao === 1) {
+        let conta = abrirContaCorrente();
         console.log('');
         console.log('Você escolheu abrir uma conta corrente.');
-
-        //TODO: transformar em uma função
-        let titularCC = prompt('Digite o nome completo do titular da conta: ');
-        let senhaCC = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
-        let contaCorrente = new ContaCorrente(titularCC, senhaCC);
-
         console.log('');
-        console.log(`${contaCorrente.titular}, sua conta corrente foi aberta com sucesso, seja bem vinde ao BruBank!`);
+        console.log(`${conta.titular}, sua ${conta.tipo} foi aberta com sucesso, seja bem vinde ao BruBank!`);
         console.log('');
-        contaCorrente.exibirDetalhes();
+        conta.exibirDetalhes();
         console.log('');
-        console.log('Deseja realizar mais alguma operação?');
 
-        //TODO: elaborar funções que chamam os métodos da conta
+        let seguir = prompt('Deseja realizar mais alguma operação? (S/N) ').toUpperCase();
+        seguir = validarSN(seguir);
+        
+        if (seguir === 'N') {
+            encerrarOperacao();
+            break;
+        }
 
+        if (seguir === 'S') {
+            movimentarConta(conta);
+        }
         continue;
     }
     
@@ -48,18 +46,25 @@ while(fechar === false) {
         console.log('');
         console.log('Você escolheu abrir uma conta poupança.');
 
-        //TODO: transformar em uma função
-        let titularCP = prompt('Digite o nome do titular da conta: ');
-        let senhaCP = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
-        let contaPoupanca = new ContaPoupanca(titularCP, senhaCP);
+        let conta = abrirContaPoupanca();
         console.log('');
-        console.log(`${contaPoupanca.titular}, sua conta poupança foi aberta com sucesso, seja bem vinde ao BruBank!`);
+        console.log(`${conta.titular}, sua ${conta.tipo} foi aberta com sucesso, seja bem vinde ao BruBank!`);
+        console.log('');    
+        conta.exibirDetalhes();
         console.log('');
-        contaPoupanca.exibirDetalhes();
-        console.log('');
-        console.log('Deseja realizar mais alguma operação?');
 
-        //TODO: elaborar funções que chamam os métodos da conta
+        let seguir = prompt('Deseja realizar mais alguma operação? (S/N) ').toUpperCase();
+        seguir = validarSN(seguir);
+        
+        if (seguir === 'N') {
+            encerrarOperacao();
+            break;
+        }
+
+        if (seguir === 'S') {
+            movimentarConta(conta);
+        }
+        continue;
 
         continue;
     }
@@ -73,24 +78,83 @@ while(fechar === false) {
 }
 
 function abrirContaCorrente() {
-    //TODO: Implementar
+    let titularCC = prompt('Digite o nome completo do titular da conta: ');
+    let senhaCC = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
+    let novaContaC = new ContaCorrente(titularCC, senhaCC);
+
+    return novaContaC;
 }
 
 function abrirContaPoupanca() {
-    //TODO: Implementar
+    let titularCP = prompt('Digite o nome do titular da conta: ');
+    let senhaCP = prompt('Digite uma senha de 6 dígitos para acessar a conta: ');
+    let novaContaP = new ContaPoupanca(titularCP, senhaCP);
+
+    return novaContaP;
 }
 
 function exibeMenuPrincipal() {
     console.log('------------ MENU ------------');
     console.log('|  1. Abrir conta corrente   |');
     console.log('|  2. Abrir conta poupança   |');
+    console.log('|                            |');
     console.log('|  3. Sair                   |');
     console.log('------------------------------');
 }
 
-function validaOpcao(opcao, opcoesMenuPrincipal) {
+function exibeMenuDaConta() {
+    console.log('-------- MENU DA CONTA --------');
+    console.log('|  1. Sacar                    |');
+    console.log('|  2. Depositar                |');
+    console.log('|  3. Verificar Saldo          |');
+    console.log('|                              |');
+    console.log('|  4. Voltar ao Menu Principal |');
+    console.log('--------------------------------');
+}
+
+function movimentarConta(conta) {
+    while (seguir === 'S') {
+        console.log('');
+        exibeMenuDaConta();
+        let opcaoConta = parseInt(prompt('Digite o número da opção desejada: '));
+        opcaoConta = validaOpcao(opcaoConta, opcoesMenuDaConta);
+
+        console.log('');
+
+        if (opcaoConta === 1) {
+            let valorSaque = parseFloat(prompt('Digite o valor que deseja sacar: R$').replace(/,/g, '.'));
+            conta.sacar(valorSaque);
+            console.log('');
+        }
+
+        if (opcaoConta === 2) {
+            let valorDeposito = parseFloat(prompt('Digite o valor que deseja depositar: R$').replace(/,/g, '.'));
+            conta.depositar(valorDeposito);
+            console.log('');
+        }
+
+        if (opcaoConta === 3) {
+            conta.verificarSaldo();
+            console.log('');
+        }
+
+        if (opcaoConta === 4) {
+            console.log('Retornando ao Menu Principal...');
+            console.log('');
+            seguir = 'N';
+            break;
+        }
+    }
+}
+
+function encerrarOperacao() {    
+    console.log('Obrigado por utilizar o Brubank! Volte sempre!');
+    fechar = true;
+}
+
+function validaOpcao(opcao, opcoesMenu) {
     try{
-        if (!opcoesMenuPrincipal.includes(opcao)) {
+        if (!opcoesMenu.includes(opcao)) {
             throw (new Error('Opção inválida! Tente novamente.'));
         }
     } catch (error) {
@@ -98,7 +162,22 @@ function validaOpcao(opcao, opcoesMenuPrincipal) {
         console.log('');
         
         opcao = parseInt(prompt('Digite o número da opção desejada: '));
-        opcao = validaOpcao (opcao, opcoesMenuPrincipal);    
+        opcao = validaOpcao (opcao, opcoesMenu);    
     }
     return opcao;
+}
+
+function validarSN(entrada) {
+    try {
+        if (entrada !== 'S' && entrada !== 'N') {
+            throw (new Error(`Entrada inválida! Digite apenas 'S' para sim ou apenas 'N' para não.`));
+        }
+    } catch (error) {
+        console.error(error.message);
+        console.log('');
+
+        entrada = prompt(`Digite um valor válido: `).toUpperCase();
+        entrada = validarSN(entrada);
+    }
+    return entrada;
 }
