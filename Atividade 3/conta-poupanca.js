@@ -18,6 +18,7 @@ class ContaPoupanca extends Conta {
     exibirDetalhes() {
         super.exibirDetalhes();
         console.log(`Rendimento: ${this.rendimento}`);
+        console.log(``);
         return
     }
 }

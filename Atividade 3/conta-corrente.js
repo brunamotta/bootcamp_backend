@@ -18,6 +18,7 @@ class ContaCorrente extends Conta {
     exibirDetalhes() {
         super.exibirDetalhes();
         console.log(`Juros: ${this.juros}`);
+        console.log(``);
         return
     }
 }

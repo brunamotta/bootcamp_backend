@@ -14,7 +14,6 @@ while(fechar === false) {
     exibeMenuPrincipal();
     let opcao = parseInt(prompt('Digite o número da opção desejada: ')); //captura opção desejada
     opcao = validaOpcao(opcao, opcoesMenuPrincipal); //valida entrada do usuário
-    console.log('');
 
     if (opcao === 1) { //ABRIR CONTA CORRENTE
         let tipoConta = 'corrente';
@@ -36,6 +35,7 @@ while(fechar === false) {
         
         console.log('');
         console.log('Você escolheu abrir uma conta poupança.');
+        console.log('');
 
         let conta = abrirConta(tipoConta);
         
@@ -108,7 +108,7 @@ function seguirParaOpcoesConta(conta) {
     }
 }
 
-function movimentarConta(conta) { //submenu da aplicação para movimentação da conta
+function movimentarConta(seguir, conta) { //submenu da aplicação para movimentação da conta
     while (seguir === 'S') {
         console.log('');
         exibeMenuDaConta();

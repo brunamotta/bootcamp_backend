@@ -48,7 +48,6 @@ class Conta {
         console.log(`Número da Conta: ${this.numero}`);
         console.log(`Titular: ${this.titular}`);
         console.log(`Saldo: R$${this.saldo}`);
-        console.log(``);
     }
 }
 
