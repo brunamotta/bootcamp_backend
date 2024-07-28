@@ -7,22 +7,32 @@ class Conta {
 
     constructor(titular, senha) {
         this.numero = Math.floor(Math.random() * 1000000);
-        this.senha = senha; //TODO: Criar validação de senha(6 digitos numericos, etc)
+        this.senha = senha;
         this.titular = titular;
         this.#saldo = 0.00;
     }
 
     depositar(valor) {
-        this.saldo += valor;
-        console.log(`Depósito de R$${valor} realizado com sucesso. Seu novo saldo é: R$${this.saldo}.`);
+        if(valor > 0) {
+            this.saldo += valor;
+            console.log(`Depósito de R$${valor} realizado com sucesso. Seu novo saldo é: R$${this.saldo}.`);
+        } else {
+            console.log('Não é possível depositar valores negativos.');
+        }
     }
 
     sacar(valor) {
-        if (this.saldo >= valor) {
-            this.saldo -= valor;
-            return console.log(`O saque de R$${valor} foi realizado com sucesso. Seu novo saldo é: R$${this.saldo}.`);
+        if(valor > 0) {
+            if (this.saldo >= valor) {
+                this.saldo -= valor;
+                return console.log(`O saque de R$${valor} foi realizado com sucesso. Seu novo saldo é: R$${this.saldo}.`);
+            }   
+
+            return console.log(`Não foi possível realizar a operação saque de R$${valor}: Saldo insuficiente.`);
+
+        } else {
+            return console.log('Não é possível sacar valores negativos.');
         }
-        return console.log(`Não foi possível realizar a operação saque de R$${valor}: Saldo insuficiente.`);
     }
 
     verificarSaldo() {
@@ -42,12 +52,11 @@ class Conta {
     }
 
     exibirDetalhes() {
-        console.log(``);
-        console.log(`Detalhes da sua conta:`);
-        console.log(`Tipo: ${this.constructor.tipo}`);
-        console.log(`Número da Conta: ${this.numero}`);
-        console.log(`Titular: ${this.titular}`);
-        console.log(`Saldo: R$${this.saldo}`);
+        console.log(`------ Informações da sua conta ------`);
+        console.log(` Tipo: ${this.constructor.tipo}`);
+        console.log(` Número da Conta: ${this.numero}`);
+        console.log(` Titular: ${this.titular}`);    
+        console.log(` Saldo: R$${this.saldo}`);
     }
 }
 

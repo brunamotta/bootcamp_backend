@@ -1,12 +1,19 @@
+//Importando clases
 const ContaCorrente = require('./conta-corrente.js');
 const ContaPoupanca = require('./conta-poupanca.js');
 const prompt = require('prompt-sync')();
+
+// DECLARAÇÃO DE VARIÁVEIS
 const opcoesMenuPrincipal = [1, 2, 3];
 const opcoesMenuDaConta = [1, 2, 3, 4, 5];
 let fechar = false;
 
+
+// MENSAGEM DE BOAS VINDAS
 console.log('');
+console.log('--------------------------------------------------------------------------------------------- ');
 console.log(' Seja bem vindo ao Brubank! Abra sua conta conosco e aproveite as melhores taxas do mercado!');
+console.log('--------------------------------------------------------------------------------------------- ');
 console.log('');
 
 // ENTRANDO NO MENU PRINCIPAL DO BRUBANK
@@ -14,8 +21,9 @@ while(fechar === false) {
     exibeMenuPrincipal();
     let opcao = parseInt(prompt('Digite o número da opção desejada: ')); //captura opção desejada
     opcao = validaOpcao(opcao, opcoesMenuPrincipal); //valida entrada do usuário
-
-    if (opcao === 1) { //ABRIR CONTA CORRENTE
+    
+    //ABRIR CONTA CORRENTE
+    if (opcao === 1) {
         let tipoConta = 'corrente';
         
         console.log('');
@@ -24,7 +32,7 @@ while(fechar === false) {
         
         let conta = abrirConta(tipoConta);
         conta.exibirDetalhes();
-        seguirParaOpcoesConta();
+        seguirParaOpcoesConta(conta);
 
         continue;
     }
@@ -39,20 +47,26 @@ while(fechar === false) {
 
         let conta = abrirConta(tipoConta);
         
-        console.log('');
         conta.exibirDetalhes();
-        seguirParaOpcoesConta();
+        seguirParaOpcoesConta(conta);
 
         continue;
     }
 
     //SAIR E ENCERRAR O PROGRAMA
     if (opcao === 3) {
-        console.log('');
-        console.log('Obrigado por utilizar o Brubank! Volte sempre!');
-        fechar = true;
+        encerrarOperacao()
         break;
     }
+}
+
+function exibeMenuPrincipal() {
+    console.log('------------ MENU ------------');
+    console.log('|  1. Abrir conta corrente   |');
+    console.log('|  2. Abrir conta poupança   |');
+    console.log('|                            |');
+    console.log('|  3. Sair                   |');
+    console.log('------------------------------');
 }
 
 function abrirConta(tipo) {
@@ -66,45 +80,26 @@ function abrirConta(tipo) {
     }
 
     if(tipo === 'poupanca') {
-        novaConta = new ContaPoupanca(titular, senha); // abre conta se tipo for poupanca
+        novaConta = new ContaPoupanca(titular, senha); //abre conta se tipo for poupanca
     }
 
-    console.log(`${novaConta.titular}, sua ${novaConta.tipo} foi aberta com sucesso! O BruBank agradece a preferência.`); //imprime resultado
+    console.log(`${novaConta.titular}, sua ${novaConta.constructor.tipo} foi aberta com sucesso! O BruBank agradece a preferência.`); //imprime resultado
     console.log('');
 
     return novaConta;
 }
 
-function exibeMenuPrincipal() {
-    console.log('------------ MENU ------------');
-    console.log('|  1. Abrir conta corrente   |');
-    console.log('|  2. Abrir conta poupança   |');
-    console.log('|                            |');
-    console.log('|  3. Sair                   |');
-    console.log('------------------------------');
-}
-
-function exibeMenuDaConta() {
-    console.log('-------- MENU DA CONTA --------');
-    console.log('|  1. Sacar                    |');
-    console.log('|  2. Depositar                |');
-    console.log('|  3. Verificar Saldo          |');
-    console.log('|  4. Informações da conta     |');
-    console.log('|                              |');
-    console.log('|  5. Voltar ao Menu Principal |');
-    console.log('--------------------------------');
-}
-
 function seguirParaOpcoesConta(conta) {
     let seguir = prompt('Deseja realizar mais alguma operação? (S/N) ').toUpperCase(); //captura a escolha do usuário de continuar a movimentar a conta ou não
-    seguir = validarSN(seguir);
+    console.log(seguir);
+    seguir = validarSimOuNao(seguir);
     
     if (seguir === 'N') {
         encerrarOperacao(); //encerra a movimentação da conta e volta ao menu principal
     }
 
     if (seguir === 'S') {
-        movimentarConta(conta); // inicia o menu com opções de movimentação da conta
+        movimentarConta(seguir, conta); // inicia o menu com opções de movimentação da conta
     }
 }
 
@@ -118,13 +113,15 @@ function movimentarConta(seguir, conta) { //submenu da aplicação para moviment
         console.log('');
 
         if (opcaoConta === 1) {
-            let valorSaque = parseFloat(prompt('Digite o valor que deseja sacar: R$').replace(/,/g, '.')); //captura entrada do usuário e trata os dados para o tipo float usando REGEX para substituir vírgulas por pontos
+            let valorSaque = parseFloat(prompt('Digite o valor que deseja sacar: R$').replace(/,/g, '.'));
+            valorSaque = validaEntradaNumerica(valorSaque) //captura entrada do usuário e trata os dados para o tipo float usando REGEX para substituir vírgulas por pontos
             conta.sacar(valorSaque);
             console.log('');
         }
 
         if (opcaoConta === 2) {
             let valorDeposito = parseFloat(prompt('Digite o valor que deseja depositar: R$').replace(/,/g, '.')); //captura entrada do usuário e trata os dados para o tipo float usando REGEX para substituir vírgulas por pontos
+            valorDeposito = validaEntradaNumerica(valorDeposito);
             conta.depositar(valorDeposito);
             console.log('');
         }
@@ -148,11 +145,26 @@ function movimentarConta(seguir, conta) { //submenu da aplicação para moviment
     }
 }
 
+
+function exibeMenuDaConta() {
+    console.log('-------- MENU DA CONTA --------');
+    console.log('|  1. Sacar                    |');
+    console.log('|  2. Depositar                |');
+    console.log('|  3. Verificar Saldo          |');
+    console.log('|  4. Informações da conta     |');
+    console.log('|                              |');
+    console.log('|  5. Voltar ao Menu Principal |');
+    console.log('--------------------------------');
+}
+
 function encerrarOperacao() {    
+    console.log('');
     console.log('Obrigado por utilizar o Brubank! Volte sempre!');
     fechar = true;
 }
 
+
+// FUNÇÕES DE VALIDAÇÃO DE ENTRADA DO USUÁRIO
 function validaOpcao(opcao, opcoesMenu) {
     try{
         if (!opcoesMenu.includes(opcao)) {
@@ -169,7 +181,7 @@ function validaOpcao(opcao, opcoesMenu) {
     return opcao;
 }
 
-function validarSN(entrada) {
+function validarSimOuNao(entrada) {
     try {
         if (entrada !== 'S' && entrada !== 'N') {
             throw (new Error(`Entrada inválida! Digite apenas 'S' para sim ou apenas 'N' para não.`));
@@ -179,7 +191,7 @@ function validarSN(entrada) {
         console.log('');
 
         entrada = prompt(`Digite um valor válido: `).toUpperCase();
-        entrada = validarSN(entrada);
+        entrada = validarSimOuNao(entrada);
     }
 
     return entrada;
@@ -198,4 +210,19 @@ function validarSenha(senha) {
     }
 
     return senha;
+}
+
+function validaEntradaNumerica(entrada) {
+    try {
+        if (isNaN(entrada)) {
+            throw (new Error('Entrada inválida! Digite apenas números.'));
+        }
+    } catch (error) {
+        console.error(error.message);
+        console.log('');
+        entrada = parseFloat(prompt('Digite um valor numérico: '));
+        entrada = validaEntradaNumerica(entrada);
+    }
+
+    return entrada;
 }
