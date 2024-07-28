@@ -5,7 +5,7 @@ const prompt = require('prompt-sync')();
 
 // DECLARAÇÃO DE VARIÁVEIS
 const opcoesMenuPrincipal = [1, 2, 3];
-const opcoesMenuDaConta = [1, 2, 3, 4, 5];
+const opcoesMenuDaConta = [1, 2, 3, 4, 5, 6];
 let fechar = false;
 
 
@@ -137,6 +137,14 @@ function movimentarConta(seguir, conta) { //submenu da aplicação para moviment
         }
 
         if (opcaoConta === 5) {
+            if(conta.constructor.tipo === 'Conta Corrente') {
+                conta.aplicarJuros();
+            } else {
+                conta.aplicarRendimento();
+            }
+        }
+
+        if (opcaoConta === 6) {
             console.log('Retornando ao Menu Principal...');
             console.log('');
             seguir = 'N';
@@ -145,16 +153,16 @@ function movimentarConta(seguir, conta) { //submenu da aplicação para moviment
     }
 }
 
-
 function exibeMenuDaConta() {
-    console.log('-------- MENU DA CONTA --------');
-    console.log('|  1. Sacar                    |');
-    console.log('|  2. Depositar                |');
-    console.log('|  3. Verificar Saldo          |');
-    console.log('|  4. Informações da conta     |');
-    console.log('|                              |');
-    console.log('|  5. Voltar ao Menu Principal |');
-    console.log('--------------------------------');
+    console.log('--------- MENU DA CONTA ---------');
+    console.log('|  1. Sacar                     |');
+    console.log('|  2. Depositar                 |');
+    console.log('|  3. Verificar Saldo           |');
+    console.log('|  4. Informações da conta      |');
+    console.log('|  5. Aplicar Juros/Rendimentos |');
+    console.log('|                               |');
+    console.log('|  6. Voltar ao Menu Principal  |');
+    console.log('---------------------------------');
 }
 
 function encerrarOperacao() {    
@@ -162,7 +170,6 @@ function encerrarOperacao() {
     console.log('Obrigado por utilizar o Brubank! Volte sempre!');
     fechar = true;
 }
-
 
 // FUNÇÕES DE VALIDAÇÃO DE ENTRADA DO USUÁRIO
 function validaOpcao(opcao, opcoesMenu) {
